@@ -30,6 +30,10 @@ function replyKeyBoard(param) {
     }
     return keyboard;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 893f1facced5070768bae2b3cebabbef242a4487
 function grandMenu() {
     bot.on("message", (msg)=>{ 
         switch (msg.text) {
