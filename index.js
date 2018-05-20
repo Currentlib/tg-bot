@@ -10,7 +10,7 @@ bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Привіт", replyKeyBoard("start"))
 })
 
-
+//
 
 function replyKeyBoard(param) {
     let keys;
