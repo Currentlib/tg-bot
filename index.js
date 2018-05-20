@@ -10,8 +10,6 @@ bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Привіт", replyKeyBoard("start"))
 })
 
-
-
 function replyKeyBoard(param) {
     let keys;
     let keyboard;
@@ -32,7 +30,7 @@ function replyKeyBoard(param) {
     }
     return keyboard;
 }
-
+//якась херня
 function grandMenu() {
     bot.on("message", (msg)=>{ 
         switch (msg.text) {
