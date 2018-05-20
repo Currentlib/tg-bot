@@ -30,7 +30,6 @@ function replyKeyBoard(param) {
     }
     return keyboard;
 }
-//якась херня
 function grandMenu() {
     bot.on("message", (msg)=>{ 
         switch (msg.text) {
