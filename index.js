@@ -34,18 +34,7 @@ function replyKeyBoard(param) {
 }
 
 function grandMenu() {
-    bot.on("message", (msg)=>{ /*5. таксамо лісенер
-        просто інколи треба буде (можливо) забрати ліснер message, 
-        в тому тітто часто мені то треба було, бо там бот реагвав на фото
-        і відповідно там був код щось тиу
-                bot.on("text", (txt)=>{
-                    bot.removeListener("message");
-                    ЩОСЬ ТУТ РОБИТЬСЯ
-                    bot.removeListener("text");
-                    grandMenu();
-                })
-        бо і той і той лісенер мали певні реакції на текст і шоб не було конфліктів
-
+    bot.on("message", (msg)=>{ /*master branch
         */
         switch (msg.text) {
             case 'Наявність товару/Купити': 
