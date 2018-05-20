@@ -10,11 +10,6 @@ bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Привіт", replyKeyBoard("start"))
 })
 
-<<<<<<< HEAD
-//
-
-=======
->>>>>>> currentlibBranch
 function replyKeyBoard(param) {
     let keys;
     let keyboard;
@@ -35,14 +30,9 @@ function replyKeyBoard(param) {
     }
     return keyboard;
 }
-//якась херня
+
 function grandMenu() {
-<<<<<<< HEAD
-    bot.on("message", (msg)=>{ /*master branch
-        */
-=======
     bot.on("message", (msg)=>{ 
->>>>>>> currentlibBranch
         switch (msg.text) {
             case 'Наявність товару/Купити': 
                 bot.sendMessage(msg.chat.id, "Введіть кількість чогось")
