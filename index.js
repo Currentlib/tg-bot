@@ -5,6 +5,8 @@ const bot = new TelegramBot(config.token, {polling: true})
 
 grandMenu();
 
+
+//[wfdfddsfsd]
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Привіт", replyKeyBoard("start"))
