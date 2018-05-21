@@ -19,7 +19,6 @@
   "dependencies": {
     "coupon-code": "^0.4.5",
     "node-telegram-bot-api": "^0.30.0",
-    "nodemon": "^1.17.4",
-    "require-reload": "^0.2.2"
+    "nodemon": "^1.17.4"
   }
 }

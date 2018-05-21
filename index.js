@@ -1,12 +1,8 @@
 const TelegramBot = require("node-telegram-bot-api")
 const config = require("./config.json")
-const file = require("./admin.js")
-const data = requie("./data.json")
 const bot = new TelegramBot(config.token, {polling: true})
 var modercode = require('coupon-code');
 grandMenu();
-
-file.adminMenu();
 
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
@@ -83,6 +79,24 @@ function replyKeyBoard(param) {
     return keyboard;
 }
 
+
+let itemsObj = {
+    mass : [
+        {
+            name: "Чашка",
+            price: "50грн"
+        },
+        {
+            name: "Горох",
+            price: "5грн"
+        },
+        {
+            name: "Виделка",
+            price: "25грн"
+        }
+    ]
+}
+console.log(itemsObj.mass[1].name)
 //Функція запуску роботи адмін меню
 function adminMenu() {
     bot.on("text", (msg)=>{ 
@@ -90,6 +104,12 @@ function adminMenu() {
             switch (msg.text) {
                 case 'Товар':
                     bot.sendMessage(msg.chat.id, "Список товарів", replyKeyBoard("items"))
+                    break;
+                case 'Список товарів':
+                bot.sendMessage(msg.chat.id, itemsObj.mass[1].name)
+                    itemsObj.forEach((cur, i)=>{
+                        bot.sendMessage(msg.chat.id, itemsObj.mass[i].name)
+                    })
                     break;
                 case 'Модератори': 
                     bot.sendMessage(msg.chat.id, "Список модерів") 
