@@ -1,7 +1,7 @@
 const TelegramBot = require("node-telegram-bot-api")
+const config = require("./config.json")
 
-const token = '552905592:AAFCbkNfdc2zn7ABBv7T1dKAg7RJuXOhC78'
-const bot = new TelegramBot(token, {polling: true})
+const bot = new TelegramBot(config.token, {polling: true})
 
 grandMenu();
 
@@ -36,6 +36,8 @@ function replyKeyBoard(param) {
                     {text: "Модератори"}
                 ], [
                     {text: "Згенерувати ключ"}
+                ], [
+                    {text: "Вийти"}
                 ]
             ], 
             resize_keyboard: true
@@ -45,18 +47,48 @@ function replyKeyBoard(param) {
     return keyboard;
 }
 
+bot.onText(new RegExp('\/admin'), msg=>{
+    if (msg.chat.id == config.admin) {
+        bot.sendMessage(msg.chat.id, 'Ти адмін!', replyKeyBoard("admin"))
+        adminMenu()
+    } else {
+        bot.sendMessage(msg.chat.id, 'Ти НЕ адмін!!!')
+    }
+})
+
+
+function adminMenu() {
+    bot.on("text", (msg)=>{ 
+        if (msg.chat.id == config.admin) {
+            switch (msg.text) {
+                case 'Товар':
+                    bot.sendMessage(msg.chat.id, "Список товарів")
+                    break;
+                case 'Модератори': 
+                    bot.sendMessage(msg.chat.id, "Список модерів") 
+                    break;
+                case 'Згенерувати ключ': 
+                    bot.sendMessage(msg.chat.id, "Тут буде ключ")
+                    break;
+                case 'Вийти': 
+                    bot.removeListener("text")
+                    bot.sendMessage(msg.chat.id, "Успішно", replyKeyBoard("start"))
+                    break;
+            }
+        } else {
+            bot.sendMessage(msg.chat.id, 'Ти НЕ адмін!!!')
+        }
+    })
+}
+
 function grandMenu() {
     bot.on("message", (msg)=>{ 
         switch (msg.text) {
-            case 'Наявність товару/Купити': 
-                bot.sendMessage(msg.chat.id, "Введіть кількість чогось")
-                bot.on("text", (txt)=>{
-                    bot.sendMessage(msg.chat.id, "Все вірно додано")
-                    bot.removeListener("text");
-                })
+            case 'Купити':
+                bot.sendMessage(msg.chat.id, msg.chat.id)
                 break;
-            case 'Підтримка/Питання': 
-                bot.sendMessage(msg.chat.id, "Лише в про версії")
+            case 'Питання': 
+                bot.sendMessage(msg.chat.id, "Напишіть повідомленя адміну")
                 break;
             case 'Профіль користувача': 
                 bot.sendMessage(msg.chat.id, "Лише в про версії")
