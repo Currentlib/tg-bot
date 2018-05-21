@@ -3,6 +3,7 @@ const config = require("./config.json")
 const bot = new TelegramBot(config.token, {polling: true})
 var reload = require('require-reload')(require);
 grandMenu();
+//ssS
 
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
