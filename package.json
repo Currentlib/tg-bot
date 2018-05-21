@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Currentlib/tg-bot#readme",
   "dependencies": {
     "coupon-code": "^0.4.5",
+    "lowdb": "^1.0.0",
     "node-telegram-bot-api": "^0.30.0",
     "nodemon": "^1.17.4"
   }

@@ -3,6 +3,12 @@ const config = require("./config.json")
 const bot = new TelegramBot(config.token, {polling: true})
 var modercode = require('coupon-code');
 grandMenu();
+//DATABASE
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
+
+const adapter = new FileSync('db.json')
+const db = low(adapter)
 
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
