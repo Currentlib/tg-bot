@@ -1,12 +1,9 @@
 const TelegramBot = require("node-telegram-bot-api")
 const config = require("./config.json")
-//zhopa
 const bot = new TelegramBot(config.token, {polling: true})
-
+var reload = require('require-reload')(require);
 grandMenu();
 
-
-//[wfdfddsfsd]
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Привіт", replyKeyBoard("start"))
