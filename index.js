@@ -1,9 +1,8 @@
 const TelegramBot = require("node-telegram-bot-api")
 const config = require("./config.json")
 const bot = new TelegramBot(config.token, {polling: true})
-var reload = require('require-reload')(require);
+var modercode = require('coupon-code');
 grandMenu();
-//ssS
 
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
@@ -16,6 +15,15 @@ bot.onText(/\/test/, (msg) => {
 })
 
 //Очікування команди вхду в адмінку
+bot.onText(new RegExp('\/admin'), msg=>{
+    if (msg.chat.id == config.admin) {
+        bot.sendMessage(msg.chat.id, 'Вітаю у адмін панелі!', replyKeyBoard("admin"));
+        adminInit(msg.chat.id);
+    } else {
+        bot.sendMessage(msg.chat.id, 'Ти НЕ адмін!!!')
+    }
+})
+
 
 
 
@@ -70,7 +78,7 @@ function adminMenu() {
                     bot.sendMessage(msg.chat.id, "Список модерів") 
                     break;
                 case 'Згенерувати ключ': 
-                    bot.sendMessage(msg.chat.id, "Тут буде ключ")
+                    bot.sendMessage(msg.chat.id, keygen())
                     break;
                 case 'Вийти': 
                     bot.removeListener("text")
@@ -98,4 +106,44 @@ function grandMenu() {
                 break;
         }
     })
+}
+
+//Функція ініціалізації контролера адміна
+function adminInit(id) {
+	bot.sendMessage(id, "Що робитимемо?");
+	adminMenu();
+
+}
+//Генерація одноразовового кода реєстрації модера
+function keygen () {
+	var authcode = modercode.generate({ parts: 4, partLen : 6 });
+	var time = Date.now()+100000;
+
+	function getDateTime(time) {
+
+    var date = new Date(time);
+
+    var hour = date.getHours();
+    hour = (hour < 10 ? "0" : "") + hour;
+
+    var min  = date.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
+
+    var sec  = date.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
+
+    var year = date.getFullYear();
+
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+
+    var day  = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
+
+    return day + "/" + month + "/" + year + ";" + hour + ":" + min;
+
+	}
+	var some = getDateTime(time);
+
+	return 'Код для авторизації нового працівника: '+authcode+' Термін дії: '+some+'. Працівник тепер має дати боту команду /test та надіслати даний код.';
 }
