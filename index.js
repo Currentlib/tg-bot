@@ -3,6 +3,11 @@ const config = require("./config.json")
 const bot = new TelegramBot(config.token, {polling: true})
 var modercode = require('coupon-code');
 grandMenu();
+<<<<<<< HEAD
+=======
+//ssS
+//my comment
+>>>>>>> 52788b0e65b2f0ae5ea8a7b48f72f2f8c053f66c
 
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
