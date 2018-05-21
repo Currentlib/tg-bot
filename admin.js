@@ -8,3 +8,4 @@ function admin() {
     })
 }
 
+module.exports.adminMenu = admin;

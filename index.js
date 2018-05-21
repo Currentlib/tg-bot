@@ -1,10 +1,14 @@
 const TelegramBot = require("node-telegram-bot-api")
 const config = require("./config.json")
+const file = require("./admin.js")
+const data = requie("./data.json")
 const bot = new TelegramBot(config.token, {polling: true})
 var reload = require('require-reload')(require);
 grandMenu();
 //ssS
 //my comment
+
+file.adminMenu();
 
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
@@ -56,6 +60,19 @@ function replyKeyBoard(param) {
         });
         keyboard = {reply_markup: JSON.parse(keys)};
     }
+    if (param == "items") {
+        keys = JSON.stringify({
+            keyboard: [
+                [
+                    {text: "Список товарів"}
+                ], [
+                    {text: "Додати товар"}
+                ]
+            ], 
+            resize_keyboard: true
+        });
+        keyboard = {reply_markup: JSON.parse(keys)};
+    }
     return keyboard;
 }
 
@@ -65,7 +82,7 @@ function adminMenu() {
         if (msg.chat.id == config.admin) {
             switch (msg.text) {
                 case 'Товар':
-                    bot.sendMessage(msg.chat.id, "Список товарів")
+                    bot.sendMessage(msg.chat.id, "Список товарів", replyKeyBoard("items"))
                     break;
                 case 'Модератори': 
                     bot.sendMessage(msg.chat.id, "Список модерів") 

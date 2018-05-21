@@ -19,10 +19,6 @@
   "dependencies": {
     "node-telegram-bot-api": "^0.30.0",
     "nodemon": "^1.17.4",
-<<<<<<< HEAD
     "require-reload": "^0.2.2"
-=======
-    "reload-require": "^1.0.0"
->>>>>>> master
   }
 }
