@@ -5,10 +5,23 @@ const bot = new TelegramBot(config.token, {polling: true})
 
 grandMenu();
 
+//Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Привіт", replyKeyBoard("start"))
 })
 
+//Очікування команди вхду в адмінку
+bot.onText(new RegExp('\/admin'), msg=>{
+    if (msg.chat.id == config.admin) {
+        bot.sendMessage(msg.chat.id, 'Ти адмін!', replyKeyBoard("admin"))
+        adminMenu()
+    } else {
+        bot.sendMessage(msg.chat.id, 'Ти НЕ адмін!!!')
+    }
+})
+
+
+//Набір менюшок "Клавіатур"
 function replyKeyBoard(param) {
     let keys;
     let keyboard;
@@ -47,16 +60,7 @@ function replyKeyBoard(param) {
     return keyboard;
 }
 
-bot.onText(new RegExp('\/admin'), msg=>{
-    if (msg.chat.id == config.admin) {
-        bot.sendMessage(msg.chat.id, 'Ти адмін!', replyKeyBoard("admin"))
-        adminMenu()
-    } else {
-        bot.sendMessage(msg.chat.id, 'Ти НЕ адмін!!!')
-    }
-})
-
-
+//Функція запуску роботи адмін меню
 function adminMenu() {
     bot.on("text", (msg)=>{ 
         if (msg.chat.id == config.admin) {
@@ -81,6 +85,7 @@ function adminMenu() {
     })
 }
 
+//Функція запуску загального меню
 function grandMenu() {
     bot.on("message", (msg)=>{ 
         switch (msg.text) {
