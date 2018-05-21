@@ -9,15 +9,13 @@ bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Привіт", replyKeyBoard("start"))
 })
 
-//Очікування команди вхду в адмінку
-bot.onText(new RegExp('\/admin'), msg=>{
-    if (msg.chat.id == config.admin) {
-        bot.sendMessage(msg.chat.id, 'Ти адмін!', replyKeyBoard("admin"))
-        adminMenu()
-    } else {
-        bot.sendMessage(msg.chat.id, 'Ти НЕ адмін!!!')
-    }
+//Очікування уоманди /start
+bot.onText(/\/test/, (msg) => {
+    console.log(msg)
 })
+
+//Очікування команди вхду в адмінку
+
 
 
 //Набір менюшок "Клавіатур"
