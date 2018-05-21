@@ -4,6 +4,7 @@ const bot = new TelegramBot(config.token, {polling: true})
 var reload = require('require-reload')(require);
 grandMenu();
 //ssS
+//my comment
 
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
