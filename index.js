@@ -27,6 +27,21 @@ function replyKeyBoard(param) {
         });
         keyboard = {reply_markup: JSON.parse(keys)};
     }
+    if (param == "admin") {
+        keys = JSON.stringify({
+            keyboard: [
+                [
+                    {text: "Товар"}
+                ], [
+                    {text: "Модератори"}
+                ], [
+                    {text: "Згенерувати ключ"}
+                ]
+            ], 
+            resize_keyboard: true
+        });
+        keyboard = {reply_markup: JSON.parse(keys)};
+    }
     return keyboard;
 }
 
