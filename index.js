@@ -16,9 +16,9 @@ function replyKeyBoard(param) {
         keys = JSON.stringify({
             keyboard: [
                 [
-                    {text: "Наявність товару/Купити"}
+                    {text: "Купити"}
                 ], [
-                    {text: "Підтримка/Питання"}
+                    {text: "Питання"}
                 ], [
                     {text: "Профіль користувача"}
                 ]
