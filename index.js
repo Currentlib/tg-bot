@@ -82,6 +82,7 @@ function replyKeyBoard(param) {
 //Функція запуску загального меню
 function grandMenu() {
     bot.on("message", (msg)=>{ 
+        //Адмін меню
         if (msg.chat.id == config.admin) {
             switch (msg.text) {
 
@@ -91,8 +92,6 @@ function grandMenu() {
 
                 case 'Список товарів':
                     let massive = db.getState('items')
-
-                    //console.log(massive.items)
                     massive.items.forEach((cur, i)=>{
                         let text = `Назва: ${massive.items[i].name}
 Ціна: ${massive.items[i].price} грн;`
@@ -135,13 +134,14 @@ function grandMenu() {
                     bot.removeListener("text")
                     bot.sendMessage(msg.chat.id, "Успішно", replyKeyBoard("start"))
                     break;
+
                 case '/admin':
                         bot.sendMessage(msg.chat.id, 'Вітаю у адмін панелі!', replyKeyBoard("admin"));
                     break;
             }
-        } else {
-            bot.sendMessage(msg.chat.id, 'Ти НЕ адмін!!!')
         }
+        
+        //Юзер меню
         switch (msg.text) {
 
             case 'Купити':
@@ -159,11 +159,7 @@ function grandMenu() {
     })
 }
 
-//Функція ініціалізації контролера адміна
-function adminInit(id) {
-	bot.sendMessage(id, "Що робитимемо?");
-	adminMenu();
-}
+
 //Генерація одноразовового кода реєстрації модера
 function keygen () {
 	var authcode = modercode.generate({ parts: 4, partLen : 6 });
