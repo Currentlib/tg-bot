@@ -140,7 +140,7 @@ function grandMenu() {
                     break;
             }
         }
-        
+         
         //Юзер меню
         switch (msg.text) {
 
