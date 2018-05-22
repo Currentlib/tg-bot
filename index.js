@@ -23,11 +23,6 @@ bot.onText(/\/test/, (msg) => {
     console.log(msg)
 })
 
-//Очікування команди вхду в адмінку
-bot.on(new RegExp('\/admin'), msg=>{
-    
-})
-
 
 
 
@@ -99,7 +94,9 @@ function grandMenu() {
 
                     //console.log(massive.items)
                     massive.items.forEach((cur, i)=>{
-                        bot.sendMessage(msg.chat.id, massive.items[i].name)
+                        let text = `Назва: ${massive.items[i].name}
+Ціна: ${massive.items[i].price} грн;`
+                        bot.sendMessage(msg.chat.id, text)
                     })
                     break;
 
@@ -110,16 +107,19 @@ function grandMenu() {
                         price: ""
                     };
                     bot.on("text", (name)=>{
-                        obj.name = name.text;
-                        bot.sendMessage(msg.chat.id, "Введіть ціну товару");
-                        bot.on("text", (price)=>{
-                            obj.price = price.text;
-                            db.get("items")
-                            .push(obj)
-                            .write();
-                            bot.sendMessage(msg.chat.id, "Товар успішно додано");
+                        if (name.text != "Додати товар") {
+                            obj.name = name.text;
+                            bot.sendMessage(msg.chat.id, "Введіть ціну товару");
                             bot.removeListener("text")
-                        })
+                            bot.on("text", (price)=>{
+                                obj.price = price.text;
+                                db.get("items")
+                                .push(obj)
+                                .write();
+                                bot.sendMessage(msg.chat.id, "Товар успішно додано");
+                                bot.removeListener("text")
+                            })
+                        }
                     })
                         break;
 
@@ -135,20 +135,14 @@ function grandMenu() {
                     bot.removeListener("text")
                     bot.sendMessage(msg.chat.id, "Успішно", replyKeyBoard("start"))
                     break;
+                case '/admin':
+                        bot.sendMessage(msg.chat.id, 'Вітаю у адмін панелі!', replyKeyBoard("admin"));
+                    break;
             }
         } else {
             bot.sendMessage(msg.chat.id, 'Ти НЕ адмін!!!')
         }
         switch (msg.text) {
-
-            case '/admin':
-                if (msg.chat.id == config.admin) {
-                    bot.sendMessage(msg.chat.id, 'Вітаю у адмін панелі!', replyKeyBoard("admin"));
-                    adminInit(msg.chat.id);
-                } else {
-                    bot.sendMessage(msg.chat.id, 'Ти НЕ адмін!!!')
-                }
-                break;
 
             case 'Купити':
                 bot.sendMessage(msg.chat.id, msg.chat.id)
