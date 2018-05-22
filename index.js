@@ -13,14 +13,6 @@ const db = low(adapter)
 db.defaults({items: []})
 .write()
 
-db.get("items")
-.push({name: "Чашка", price: "50"})
-.write()
-
-
-
-
-
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Привіт", replyKeyBoard("start"))
@@ -32,13 +24,8 @@ bot.onText(/\/test/, (msg) => {
 })
 
 //Очікування команди вхду в адмінку
-bot.onText(new RegExp('\/admin'), msg=>{
-    if (msg.chat.id == config.admin) {
-        bot.sendMessage(msg.chat.id, 'Вітаю у адмін панелі!', replyKeyBoard("admin"));
-        adminInit(msg.chat.id);
-    } else {
-        bot.sendMessage(msg.chat.id, 'Ти НЕ адмін!!!')
-    }
+bot.on(new RegExp('\/admin'), msg=>{
+    
 })
 
 
@@ -96,26 +83,54 @@ function replyKeyBoard(param) {
     return keyboard;
 }
 
-//Функція запуску роботи адмін меню
-function adminMenu() {
-    bot.on("text", (msg)=>{ 
+
+//Функція запуску загального меню
+function grandMenu() {
+    bot.on("message", (msg)=>{ 
         if (msg.chat.id == config.admin) {
             switch (msg.text) {
+
                 case 'Товар':
                     bot.sendMessage(msg.chat.id, "Список товарів", replyKeyBoard("items"))
                     break;
+
                 case 'Список товарів':
-                bot.sendMessage(msg.chat.id, "itemsObj.mass[1].name")
-                    itemsObj.forEach((cur, i)=>{
-                        bot.sendMessage(msg.chat.id, "sdssd")
+                    let massive = db.getState('items')
+
+                    //console.log(massive.items)
+                    massive.items.forEach((cur, i)=>{
+                        bot.sendMessage(msg.chat.id, massive.items[i].name)
                     })
                     break;
+
+                case 'Додати товар':
+                    bot.sendMessage(msg.chat.id, "Введіть назву товару")
+                    let obj = {
+                        name: "",
+                        price: ""
+                    };
+                    bot.on("text", (name)=>{
+                        obj.name = name.text;
+                        bot.sendMessage(msg.chat.id, "Введіть ціну товару");
+                        bot.on("text", (price)=>{
+                            obj.price = price.text;
+                            db.get("items")
+                            .push(obj)
+                            .write();
+                            bot.sendMessage(msg.chat.id, "Товар успішно додано");
+                            bot.removeListener("text")
+                        })
+                    })
+                        break;
+
                 case 'Модератори': 
                     bot.sendMessage(msg.chat.id, "Список модерів") 
                     break;
+
                 case 'Згенерувати ключ': 
                     bot.sendMessage(msg.chat.id, keygen())
                     break;
+
                 case 'Вийти': 
                     bot.removeListener("text")
                     bot.sendMessage(msg.chat.id, "Успішно", replyKeyBoard("start"))
@@ -124,19 +139,25 @@ function adminMenu() {
         } else {
             bot.sendMessage(msg.chat.id, 'Ти НЕ адмін!!!')
         }
-    })
-}
-
-//Функція запуску загального меню
-function grandMenu() {
-    bot.on("message", (msg)=>{ 
         switch (msg.text) {
+
+            case '/admin':
+                if (msg.chat.id == config.admin) {
+                    bot.sendMessage(msg.chat.id, 'Вітаю у адмін панелі!', replyKeyBoard("admin"));
+                    adminInit(msg.chat.id);
+                } else {
+                    bot.sendMessage(msg.chat.id, 'Ти НЕ адмін!!!')
+                }
+                break;
+
             case 'Купити':
                 bot.sendMessage(msg.chat.id, msg.chat.id)
                 break;
+
             case 'Питання': 
                 bot.sendMessage(msg.chat.id, "Напишіть повідомленя адміну")
                 break;
+
             case 'Профіль користувача': 
                 bot.sendMessage(msg.chat.id, "Лише в про версії")
                 break;
@@ -148,7 +169,6 @@ function grandMenu() {
 function adminInit(id) {
 	bot.sendMessage(id, "Що робитимемо?");
 	adminMenu();
-
 }
 //Генерація одноразовового кода реєстрації модера
 function keygen () {
