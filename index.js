@@ -20,9 +20,8 @@ bot.onText(/\/start/, (msg) => {
 })
 
 //Очікування уоманди /start
-bot.onText(/\/test/, (msg) => {
-    let abc = "start"
-    console.log(menu.start)
+bot.onText(/\/emp/, (msg) => {
+    //TODO moder menu
 })
 
 bot.on("callback_query", query=>{
@@ -40,14 +39,16 @@ bot.on("callback_query", query=>{
                 bot.sendMessage(name.chat.id, "Введіть нову ціну товару");
                 bot.removeListener("text")
                 bot.on("text", (price)=>{
+                    bot.sendMessage(price.chat.id, "Товар успішно змінено");
+                    bot.removeListener("text");
                     obj.price = price.text;
                     db.get("items")
                     .find({name: parsed.name})
                     .assign({name: obj.name, price: obj.price}) 
                     .write();
                     db.save();
-                    bot.sendMessage(price.chat.id, "Товар успішно змінено");
-                    bot.removeListener("text")
+                    
+                   
                 })
             }
         })
