@@ -1,0 +1,38 @@
+{
+    "start": {
+        "keyboard": [
+            [
+                {"text": "Купити"}
+            ], [
+                {"text": "Питання"}
+            ], [
+                {"text": "Профіль користувача"}
+            ]
+        ], 
+        "resize_keyboard": true
+    },
+    "admin": {
+        "keyboard": [
+            [
+                {"text": "Товар"}
+            ], [
+                {"text": "Модератори"}
+            ], [
+                {"text": "Згенерувати ключ"}
+            ], [
+                {"text": "Вийти"}
+            ]
+        ], 
+        "resize_keyboard": true
+    },
+    "items": {
+        "keyboard": [
+            [
+                {"text": "Список товарів"}
+            ], [
+                {"text": "Додати товар"}
+            ]
+        ], 
+        "resize_keyboard": true
+    }
+}
