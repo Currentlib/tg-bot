@@ -2,6 +2,7 @@ const TelegramBot = require("node-telegram-bot-api")
 const config = require("./config.json")
 const bot = new TelegramBot(config.token, {polling: true})
 var modercode = require('coupon-code');
+const menu = require("./menu.json")
 grandMenu();
 //DATABASE
 const low = require('lowdb')
@@ -15,69 +16,72 @@ db.defaults({items: []})
 
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
-    bot.sendMessage(msg.chat.id, "Привіт", replyKeyBoard("start"))
+    bot.sendMessage(msg.chat.id, "Привіт", replyKeyBoard(menu.start))
 })
 
 //Очікування уоманди /start
 bot.onText(/\/test/, (msg) => {
-    console.log(msg)
+    let abc = "start"
+    console.log(menu.start)
 })
 
+bot.on("callback_query", query=>{
+    let parsed = JSON.parse(query.data)
+    //console.log(query)
+    if (parsed.isEdit) {
+        bot.sendMessage(query.from.id, "Введіть нову назву товару")
+        let obj = {
+            name: "",
+            price: ""
+        };
+        bot.on("text", (name)=>{
+            if (name.text != "Додати товар") {
+                obj.name = name.text;
+                bot.sendMessage(name.chat.id, "Введіть нову ціну товару");
+                bot.removeListener("text")
+                bot.on("text", (price)=>{
+                    obj.price = price.text;
+                    db.get("items")
+                    .find({name: parsed.name})
+                    .assign({name: obj.name, price: obj.price}) 
+                    .write();
+                    db.save();
+                    bot.sendMessage(price.chat.id, "Товар успішно змінено");
+                    bot.removeListener("text")
+                })
+            }
+        })
+    }
 
+    if (parsed.isDelete) {
+        bot.sendMessage(query.from.id, `Ви впевнені, що хочете видалити ${parsed.name}?`)
+    }
+})
 
+//Набір кнопок при повідомленнях
 
-//Набір менюшок "Клавіатур"
-function replyKeyBoard(param) {
+function inlineKeyBoard(param, name) {
     let keys;
     let keyboard;
-    if (param == "start") {
-        keys = JSON.stringify({
-            keyboard: [
-                [
-                    {text: "Купити"}
-                ], [
-                    {text: "Питання"}
-                ], [
-                    {text: "Профіль користувача"}
-                ]
-            ], 
-            resize_keyboard: true
-        });
-        keyboard = {reply_markup: JSON.parse(keys)};
-    }
-    if (param == "admin") {
-        keys = JSON.stringify({
-            keyboard: [
-                [
-                    {text: "Товар"}
-                ], [
-                    {text: "Модератори"}
-                ], [
-                    {text: "Згенерувати ключ"}
-                ], [
-                    {text: "Вийти"}
-                ]
-            ], 
-            resize_keyboard: true
-        });
-        keyboard = {reply_markup: JSON.parse(keys)};
-    }
-    if (param == "items") {
-        keys = JSON.stringify({
-            keyboard: [
-                [
-                    {text: "Список товарів"}
-                ], [
-                    {text: "Додати товар"}
-                ]
-            ], 
-            resize_keyboard: true
-        });
-        keyboard = {reply_markup: JSON.parse(keys)};
+    if (param == "item") {
+        keys = {
+            inline_keyboard: [
+                [{text: "Редагувати", callback_data: JSON.stringify({name: name, isEdit: true})}, {text: 'Видалити', callback_data: JSON.stringify({name: name, isDelete: true})}]
+            ]
+        }
+        keyboard = {
+            reply_markup: JSON.stringify(keys)
+        }
     }
     return keyboard;
 }
 
+
+//Набір менюшок "Клавіатур"
+function replyKeyBoard(param) {
+    let keyboard = {reply_markup: param};
+    return keyboard;
+}
 
 //Функція запуску загального меню
 function grandMenu() {
@@ -87,15 +91,15 @@ function grandMenu() {
             switch (msg.text) {
 
                 case 'Товар':
-                    bot.sendMessage(msg.chat.id, "Список товарів", replyKeyBoard("items"))
+                    bot.sendMessage(msg.chat.id, "Список товарів", replyKeyBoard(menu.items))
                     break;
 
                 case 'Список товарів':
                     let massive = db.getState('items')
                     massive.items.forEach((cur, i)=>{
                         let text = `Назва: ${massive.items[i].name}
-Ціна: ${massive.items[i].price} грн;`
-                        bot.sendMessage(msg.chat.id, text)
+Ціна: ${massive.items[i].price} грн;`;
+                        bot.sendMessage(msg.chat.id, text, inlineKeyBoard("item", massive.items[i].name))
                     })
                     break;
 
@@ -132,11 +136,11 @@ function grandMenu() {
 
                 case 'Вийти': 
                     bot.removeListener("text")
-                    bot.sendMessage(msg.chat.id, "Успішно", replyKeyBoard("start"))
+                    bot.sendMessage(msg.chat.id, "Успішно", replyKeyBoard(menu.start))
                     break;
 
                 case '/admin':
-                        bot.sendMessage(msg.chat.id, 'Вітаю у адмін панелі!', replyKeyBoard("admin"));
+                        bot.sendMessage(msg.chat.id, 'Вітаю у адмін панелі!', replyKeyBoard(menu.admin));
                     break;
             }
         }
