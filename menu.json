@@ -16,11 +16,23 @@
             [
                 {"text": "Товар"}
             ], [
+                {"text": "Точки"}
+            ], [
                 {"text": "Модератори"}
             ], [
                 {"text": "Згенерувати ключ"}
+            ]
+        ], 
+        "resize_keyboard": true
+    },
+    "moder": {
+        "keyboard": [
+            [
+                {"text": "Наявність товару"}
             ], [
-                {"text": "Вийти"}
+                {"text": "Додати товар в район"}
+            ], [
+                {"text": "/moder"}
             ]
         ], 
         "resize_keyboard": true
@@ -31,6 +43,42 @@
                 {"text": "Список товарів"}
             ], [
                 {"text": "Додати товар"}
+            ], [
+                {"text": "Наявність товару"}
+            ], [
+                {"text": "/admin"}
+            ]
+        ], 
+        "resize_keyboard": true
+    },
+    "points": {
+        "keyboard": [
+            [
+                {"text": "Міста"}
+            ], [
+                {"text": "Райони"}
+            ], [
+                {"text": "/admin"}
+            ]
+        ], 
+        "resize_keyboard": true
+    },
+    "cities": {
+        "keyboard": [
+            [
+                {"text": "Додати місто"}
+            ], [
+                {"text": "/admin"}
+            ]
+        ], 
+        "resize_keyboard": true
+    },
+    "regions": {
+        "keyboard": [
+            [
+                {"text": "Додати район"}
+            ], [
+                {"text": "/admin"}
             ]
         ], 
         "resize_keyboard": true
