@@ -104,7 +104,6 @@ function citiesMassive() {
 }
 
 //Набір кнопок при повідомленнях
-
 function inlineKeyBoard(param, name) {
     let keys;
     let keyboard;
@@ -246,7 +245,7 @@ function grandMenu() {
                     let massive = db.getState('items')
                     massive.items.forEach((cur, i)=>{
                         let text = `Назва: ${massive.items[i].name}
-Ціна: ${massive.items[i].price} грн;`;
+Ціна: ${massive.items[i].price} UAH;`;
                         bot.sendMessage(msg.chat.id, text, inlineKeyBoard("item", massive.items[i].name))
                     })
                     break;
@@ -284,6 +283,10 @@ function grandMenu() {
 
                     break;
 
+                case 'Налаштування':
+                    bot.sendMessage(msg.chat.id, "Оберіть пункт меню", replyKeyBoard(menu.settings))
+                    break;
+
                 case 'Вийти': 
                     bot.removeListener("text")
                     bot.sendMessage(msg.chat.id, "Успішно", replyKeyBoard(menu.start))
@@ -319,7 +322,6 @@ function grandMenu() {
                         "keyboard": regionkeys2, 
                         "resize_keyboard": true
                     }})
-                    //bot.sendMessage(msg.chat.id, "Додати товар")
                     break;
                 case '/moder':
                     bot.sendMessage(msg.chat.id, "Меню модератора", replyKeyBoard(menu.moder))
@@ -331,9 +333,26 @@ function grandMenu() {
         switch (msg.text) {
 
             case 'Купити':
-                //bot.sendMessage(msg.chat.id, msg.chat.id)
-                //bot.sendMessage(msg.chat.id, "Товари", replyKeyBoard(menu.items))
-                bot.sendMessage(msg.chat.id, "Обери товар", replyKeyBoard( getItemList() ) )
+                bot.sendMessage(msg.chat.id, "Обери товар", replyKeyBoard( getItemList() ) );
+                bot.on("text", (name)=>{
+                    if (name.text !=='/start') {
+                        let data = name.text.split(" - ");
+                        let price = data[1].slice(0, data[1].length-3);
+                        console.log(price)
+                        let base = db.get('items').value();
+                        var itemExist = 0;
+                        base.forEach((cur, i)=>{
+                            if (cur.name==data[0] && cur.price==price) {
+                                itemExist = 1;
+                                bot.sendMessage(msg.chat.id, "yes");
+                            }
+                        });
+                        if (itemExist!==1) {
+                            bot.sendMessage(msg.chat.id, "no");
+                        }
+                        
+                    }
+                });
                 break;
 
             case 'Питання': 

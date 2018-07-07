@@ -10,8 +10,8 @@
     "type": "git",
     "url": "git+https://github.com/Currentlib/tg-bot.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Currentib & b4rracuda",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Currentlib/tg-bot/issues"
   },
