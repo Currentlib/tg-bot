@@ -284,7 +284,30 @@ function grandMenu() {
                     break;
 
                 case 'Налаштування':
-                    bot.sendMessage(msg.chat.id, "Оберіть пункт меню", replyKeyBoard(menu.settings))
+                    bot.sendMessage(msg.chat.id, "Оберіть пункт меню", replyKeyBoard(menu.settings));
+                    bot.on("text", (name)=>{
+                    	if(name.text=="Переглянути реквізити"){
+                    		let pay = db.get('pay.epay').value();
+                    		bot.sendMessage(msg.chat.id, "Поточні реквізити: "+pay);
+                    	}
+                    	else if(name.text=="Оновити реквізити"){
+                    		bot.removeListener("text");
+                    		bot.send
+                    		bot.on("text", (data)=>{
+                    			let pay=data.text;
+                    			console.log(pay)
+                    			db.set('pay.epay', pay)
+                    			  .value()
+
+                    			db.write()
+
+			                    let payy = db.get('pay.epay').value();
+                    			bot.sendMessage(msg.chat.id, 'Нові реквізити: '+payy)
+                    			bot.removeListener("text")
+                    			bot.sendMessage(msg.chat.id, "Успішно", replyKeyBoard(menu.admin))
+                    		});
+                    	}
+                    });
                     break;
 
                 case 'Вийти': 
@@ -338,7 +361,6 @@ function grandMenu() {
                     if (name.text !=='/start') {
                         let data = name.text.split(" - ");
                         let price = data[1].slice(0, data[1].length-3);
-                        console.log(price)
                         let base = db.get('items').value();
                         var itemExist = 0;
                         base.forEach((cur, i)=>{
