@@ -1,3 +1,4 @@
+process.env["NTBA_FIX_319"] = 1;
 const TelegramBot = require("node-telegram-bot-api")
 const config = require("./config.json")
 const bot = new TelegramBot(config.token, {polling: true})
@@ -16,7 +17,7 @@ const db = low(adapter)
 
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
-    bot.sendMessage(msg.chat.id, "Привіт", replyKeyBoard(menu.start))
+    bot.sendMessage(msg.chat.id, "Привіт id"+msg.chat.id, replyKeyBoard(menu.start))
 })
 
 //Очікування уоманди /start
@@ -357,6 +358,7 @@ function grandMenu() {
 
             case 'Купити':
                 bot.sendMessage(msg.chat.id, "Обери товар", replyKeyBoard( getItemList() ) );
+                bot.removeListener('text');
                 bot.on("text", (name)=>{
                     if (name.text !=='/start') {
                         let data = name.text.split(" - ");
@@ -366,11 +368,16 @@ function grandMenu() {
                         base.forEach((cur, i)=>{
                             if (cur.name==data[0] && cur.price==price) {
                                 itemExist = 1;
-                                bot.sendMessage(msg.chat.id, "yes");
+                                let pay = db.get('pay.epay').value();
+                                bot.sendMessage(msg.chat.id, "Замовлення прийнято. Реквізити до оплати: "+pay+", сума до сплати "+cur.price+" Очікую фото чека.");
+                                bot.on('photo', (name)=>{
+                                    bot.sendMessage(msg.chat.id, "Оплата очікує підтвердження");
+                                    bot.removeListener('photo');
+                                })
                             }
                         });
                         if (itemExist!==1) {
-                            bot.sendMessage(msg.chat.id, "no");
+                            
                         }
                         
                     }
