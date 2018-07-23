@@ -15,6 +15,12 @@ const db = low(adapter)
 //db.defaults({items: [], cities: [], regions: []})
 //.write()
 
+//error handling
+bot.on('polling_error', (error) => {
+	//console.log('Polling error!' + error.code)
+  bot.startPolling()
+});
+
 //Очікування уоманди /start
 bot.onText(/\/start/, (msg) => {
     bot.sendMessage(msg.chat.id, "Привіт id"+msg.chat.id, replyKeyBoard(menu.start))
