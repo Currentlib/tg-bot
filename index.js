@@ -370,8 +370,19 @@ function grandMenu() {
                                 itemExist = 1;
                                 let pay = db.get('pay.epay').value();
                                 bot.sendMessage(msg.chat.id, "Замовлення прийнято. Реквізити до оплати: "+pay+", сума до сплати "+cur.price+" Очікую фото чека.");
-                                bot.on('photo', (name)=>{
+                                bot.removeListener('text');
+                                bot.on('photo', (content)=>{
                                     bot.sendMessage(msg.chat.id, "Оплата очікує підтвердження");
+                                    switch (content.chat.username){
+                                    	case undefined:
+                                    	bot.sendMessage(config.admin, "Замовлення на товар "+cur.name+' : '+cur.price+'UAH від '+'('+content.chat.first_name+')');
+                                    	break;
+                                    	default:
+                                    	bot.sendMessage(config.admin, "Замовлення на товар "+cur.name+' : '+cur.price+'UAH від @'+content.chat.username+' ('+content.chat.first_name+')');
+
+                                    }
+                                    bot.forwardMessage(config.admin, content.chat.id, content.message_id);
+                                    //bot.sendPhoto(config.admin, content);
                                     bot.removeListener('photo');
                                 })
                             }
