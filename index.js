@@ -101,10 +101,10 @@ bot.on("callback_query", query=>{
     }
 
     if (parsed.confirm) {
-        bot.sendMessage(parsed.name.customer, 'Дякуємо, Оплату підтверджено (тут видається замовлення)',menu.start)
+        bot.sendMessage(parsed.name, 'Дякуємо, Оплату підтверджено (тут видається замовлення)',menu.start)
     }
     if (parsed.deny) {
-        bot.sendMessage(parsed.name.customer, 'Оплату відхилено, замовлення скасовано. Спробуйте ще раз.',menu.start)
+        bot.sendMessage(parsed.name, 'Оплату відхилено, замовлення скасовано. Спробуйте ще раз.',menu.start)
     }
 })
 
@@ -146,9 +146,12 @@ function inlineKeyBoard(param, name) {
 
     }
     if (param=="acceptPayment") {
+        console.log('name '+name)
         keys = {
             inline_keyboard: [
-                [{text: "Підтвердити", callback_data: JSON.stringify({name: name, confirm: true})}, {text: 'Відхилити', callback_data: JSON.stringify({name: name, deny: true})}]
+                [
+                {text: "Підтвердити", callback_data: JSON.stringify({name:name.customer, confirm: true})}, 
+                {text: 'Відхилити', callback_data: JSON.stringify({name:name.customer, deny: true})}]
             ]
         }
         keyboard = {
@@ -395,8 +398,10 @@ function grandMenu() {
                                 let pay = db.get('pay.epay').value();
                                 bot.sendMessage(msg.chat.id, "Замовлення прийнято. Реквізити до оплати: "+pay+", сума до сплати "+cur.price+" Очікую фото чека.");
                                 bot.removeListener('text');
+                                //TODO стакання корзин
                                 bot.on('photo', (content)=>{
                                     bot.sendMessage(msg.chat.id, "Оплата очікує підтвердження");
+                                    bot.forwardMessage(config.admin, content.chat.id, content.message_id);
                                     switch (content.chat.username){
                                     	case undefined:
                                     	bot.sendMessage(config.admin, "Замовлення на товар "+cur.name+' : '+cur.price+'UAH від '+'('+content.chat.first_name+')', inlineKeyBoard('acceptPayment', 
@@ -410,10 +415,21 @@ function grandMenu() {
                                         ));
                                     	break;
                                     	default:
-                                    	bot.sendMessage(config.admin, "Замовлення на товар "+cur.name+' : '+cur.price+'UAH від @'+content.chat.username+' ('+content.chat.first_name+')');
+                                    	bot.sendMessage(
+                                            config.admin, 
+                                            "Замовлення на товар "+cur.name+' : '+cur.price+'UAH від @'+content.chat.username+' ('+content.chat.first_name+')', 
+                                            inlineKeyBoard('acceptPayment', 
+                                            {
+                                                name:cur.name,
+                                                sum:cur.price,
+                                                customer:content.chat.id,
+                                                order_id:content.message_id
+                                            }
+
+                                        ));
 
                                     }
-                                    bot.forwardMessage(config.admin, content.chat.id, content.message_id);
+                                    
                                     //bot.sendPhoto(config.admin, content);
                                     bot.removeListener('photo');
                                 })
