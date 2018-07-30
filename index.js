@@ -18,7 +18,8 @@ const db = low(adapter)
 //error handling
 bot.on('polling_error', (error) => {
 	//console.log('Polling error!' + error.code)
-  bot.startPolling()
+ // bot.startPolling();
+  console.log(error+' '+modercode.generate({parts:1}));
 });
 
 //Очікування уоманди /start
@@ -98,6 +99,13 @@ bot.on("callback_query", query=>{
             }
         })
     }
+
+    if (parsed.confirm) {
+        bot.sendMessage(parsed.name.customer, 'Дякуємо, Оплату підтверджено (тут видається замовлення)',menu.start)
+    }
+    if (parsed.deny) {
+        bot.sendMessage(parsed.name.customer, 'Оплату відхилено, замовлення скасовано. Спробуйте ще раз.',menu.start)
+    }
 })
 
 //Масив міст
@@ -136,6 +144,16 @@ function inlineKeyBoard(param, name) {
     }
     if (param == "regions") {
 
+    }
+    if (param=="acceptPayment") {
+        keys = {
+            inline_keyboard: [
+                [{text: "Підтвердити", callback_data: JSON.stringify({name: name, confirm: true})}, {text: 'Відхилити', callback_data: JSON.stringify({name: name, deny: true})}]
+            ]
+        }
+        keyboard = {
+            reply_markup: JSON.stringify(keys)
+        }
     }
     return keyboard;
 }
@@ -381,7 +399,15 @@ function grandMenu() {
                                     bot.sendMessage(msg.chat.id, "Оплата очікує підтвердження");
                                     switch (content.chat.username){
                                     	case undefined:
-                                    	bot.sendMessage(config.admin, "Замовлення на товар "+cur.name+' : '+cur.price+'UAH від '+'('+content.chat.first_name+')');
+                                    	bot.sendMessage(config.admin, "Замовлення на товар "+cur.name+' : '+cur.price+'UAH від '+'('+content.chat.first_name+')', inlineKeyBoard('acceptPayment', 
+                                            {
+                                                name:cur.name,
+                                                sum:cur.price,
+                                                customer:content.chat.id,
+                                                order_id:content.message_id
+                                            }
+
+                                        ));
                                     	break;
                                     	default:
                                     	bot.sendMessage(config.admin, "Замовлення на товар "+cur.name+' : '+cur.price+'UAH від @'+content.chat.username+' ('+content.chat.first_name+')');
