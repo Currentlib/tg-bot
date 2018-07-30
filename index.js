@@ -18,7 +18,7 @@ const db = low(adapter)
 //error handling
 bot.on('polling_error', (error) => {
 	//console.log('Polling error!' + error.code)
- // bot.startPolling();
+ //bot.startPolling();
   console.log(error+' '+modercode.generate({parts:1}));
 });
 
@@ -101,10 +101,10 @@ bot.on("callback_query", query=>{
     }
 
     if (parsed.confirm) {
-        bot.sendMessage(parsed.name, 'Дякуємо, Оплату підтверджено (тут видається замовлення)',menu.start)
+        bot.sendMessage(parsed.name, 'Дякуємо, Оплату підтверджено (тут видається замовлення)',replyKeyBoard(menu.start))
     }
     if (parsed.deny) {
-        bot.sendMessage(parsed.name, 'Оплату відхилено, замовлення скасовано. Спробуйте ще раз.',menu.start)
+        bot.sendMessage(parsed.name, 'Оплату відхилено, замовлення скасовано. Спробуйте ще раз.',replyKeyBoard(menu.start))
     }
 })
 
